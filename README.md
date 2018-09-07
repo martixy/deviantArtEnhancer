@@ -28,6 +28,11 @@ This is a one-time step, unless you change something about the build or somehow 
 6. Go to dist/ and open `local.user.js`. Change the last require line to the location you hosted the script on. Copy these contents into a new userscript and save.
 7. You are good to go. Script is now working.
 
+#### The old fashioned way
+5. Go to dist/. Open both files there. Take everything from `main.js` and copy over to `local.user.js` (below everything there). Optional: You can delete or not the last require from the userscript metadata. Tampermonkey doesn't care.
+6. Take your thusly smushed file and import into userscript manager via method of preference (i.e. copy-paste everything like it's 2006).
+7. You are good to go. Script is now working.
+
 ## Development
 
 Feel free to change the script as you wish. Local development is the easiest option. You don't need to juggle compiled assets, uploads or other such nonsense, or even touch the userscript metadata. Just do `npm/yarn run build-w` and start developing - the files are now being watched by webpack and any changes are reflected immediately(upon saving the files and reloading the page the script is running on anyway).
