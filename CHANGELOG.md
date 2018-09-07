@@ -7,7 +7,9 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\-  Removal  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\.  Comment  
 
-
+### v1.0.1 [20180907]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\* Async the DL button note (it wasn't showing when deviations loaded via dA's SPA functionality too slowly)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\+ Add a dev build script without watch.
 
 ### v1.0 [20180907]
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\+ Massive overhaul of the entire script, using modern JS, webpack as a build system, ES6, modules, etc. The whole shebang.  

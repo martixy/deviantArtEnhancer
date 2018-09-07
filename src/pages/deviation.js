@@ -7,7 +7,16 @@ const DeviationPage = function() {
 }
 
 DeviationPage.prototype.load = function() {
-    addDownloadSizeNote();
+    new Promise(function(resolve, reject) {
+        setTimeout(reject, 10000);
+        let interval = setInterval(() => {
+            let dlButton = $(".dev-page-download");
+            if (dlButton.length > 0) {
+                clearInterval(interval);
+                resolve(dlButton);
+            }
+        }, 200)
+    }).then(button => addDownloadSizeNote(button));
 
     this.downloader.bindKeys([
         {
@@ -31,18 +40,15 @@ export default DeviationPage
 
 //===========================================================================================================
 //===========================================================================================================
-function addDownloadSizeNote() {
-    let dlButton = $(".dev-page-download");
-    if (dlButton.length > 0) {
-        const size = DeviationUtils.getImageDimensions();
-        if (size) {
-            let str = ", ";
-            if (size.total > 1e+6)
-                str += (size.total/1e+6).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " MPx";
-            else
-                str += (size.total/1e+6).toLocaleString("en-US") + " MPx";
-            let el = dlButton.find(".text");
-            el.text(el.text() + str);
-        }
+function addDownloadSizeNote(button) {
+    const size = DeviationUtils.getImageDimensions();
+    if (size) {
+        let str = ", ";
+        if (size.total > 1e+6)
+            str += (size.total/1e+6).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " MPx";
+        else
+            str += (size.total/1e+6).toLocaleString("en-US") + " MPx";
+        let el = button.find(".text");
+        el.text(el.text() + str);
     }
 }

@@ -1,10 +1,11 @@
 {
   "name": "deviant-art-enhancer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A userscript that enhances browsing experience on deviantArt",
   "scripts": {
     "build": "webpack --config-register esm",
-    "build-w": "webpack --watch --config-register esm --mode=development"
+    "build-w": "webpack --watch --config-register esm --mode=development",
+    "build-dev": "webpack --config-register esm --mode=development"
   },
   "author": "martixy",
   "license": "MIT",
