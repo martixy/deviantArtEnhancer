@@ -1,0 +1,16 @@
+{
+  "artistFilter": [
+    {
+      "artist": "Artist name goes here (case sensitive)",
+      "reason": "If you write anything here it will appear as a reason for the filtering, in the browser console if remove=true",
+      "remove": true
+    }
+  ],
+  "paywallFilter": [
+    {
+      "artist": "Artist name goes here (case sensitive); nsfw used to specify if artist is selling porn, can be used as an additional filter criteria",
+      "remove": false,
+      "nsfw": false
+    }
+  ]
+}

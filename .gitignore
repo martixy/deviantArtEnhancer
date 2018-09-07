@@ -1,3 +1,11 @@
+# local built files
+dist/local.user.js
+config/config.json
+config/filter.json
+
+# IDEs
+.vscode/
+
 # Logs
 logs
 *.log
