@@ -3,8 +3,13 @@ A userscript that for enhancing browsing of deviantArt, based on a modern build 
 
 ## Usage
 1. The script can be configured to filter artists from browsing based on a range of criteria(either removing their deviations or fading them out).
-2. It places dimensions on deviations' download buttons. Also enables a couple of keyboard shortcuts: `q` and Numpad `.` download the deviation, `e` opens downloadable deviations in a new tab.
-3. On gallery pages `Shift+Click` on a deviation opens it and the next 4 deviations in new tabs automatically.
+2. It places dimensions on deviations' download buttons. Also enables a couple of keyboard shortcuts:
+`q` and Numpad `.`: Download the deviation
+`e`: Opens downloadable deviations in a new tab.
+3. On gallery pages you can use the following functions:
+`Shift+Click` on a deviation opens it and the next 4 deviations in new tabs automatically.
+`Alt+Click` on a deviation downloads the deviation right from the gallery page.
+`Alt+Shift+Click` on a deviation downloads it and the next 4 deviations right from the gallery page.
 
 All of these can be configured in their respective config files (the script has to be rebuilt for the changes to be reflected).
 

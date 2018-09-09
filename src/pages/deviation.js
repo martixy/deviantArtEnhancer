@@ -8,7 +8,7 @@ const DeviationPage = function() {
 
 DeviationPage.prototype.load = function() {
     new Promise(function(resolve, reject) {
-        setTimeout(reject, 10000);
+        setTimeout(reject, 20000);
         let interval = setInterval(() => {
             let dlButton = $(".dev-page-download");
             if (dlButton.length > 0) {
@@ -18,14 +18,23 @@ DeviationPage.prototype.load = function() {
         }, 200)
     }).then(button => addDownloadSizeNote(button));
 
+    let self = this;
     this.downloader.bindKeys([
         {
-            method: this.downloader.saveDeviation,
-            keys: config.keyBindings.download
+            keys: config.keyBindings.download,
+            method(ev) {
+                if (!$(":focus").hasClass("writer")) {
+                    self.downloader.saveDeviation();
+                }
+            }
         },
         {
-            method: this.downloader.openInNewTab,
-            keys: config.keyBindings.newTab
+            keys: config.keyBindings.newTab,
+            method(ev) {
+                if (!$(":focus").hasClass("writer")) {
+                    self.downloader.openInNewTab();
+                }
+            }
         }
     ]);
 }

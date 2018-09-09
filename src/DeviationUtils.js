@@ -1,12 +1,11 @@
-const DeviationUtils = function() {
-}
+const DeviationUtils = function() {}
 
-DeviationUtils.getImageDimensions = function(deviation) {
+DeviationUtils.getImageDimensions = function(deviation, context) {
     let a;
-    if (typeof deviation === 'undefined') {
-        a = $(".dev-page-download");
+    if (typeof deviation === 'undefined' || deviation === null) {
+        a = $(".dev-page-download", context);
         if (a.length === 0) {
-            a = $(".dev-content-full");
+            a = $(".dev-content-full", context);
         }
     }
     else {
@@ -14,57 +13,37 @@ DeviationUtils.getImageDimensions = function(deviation) {
     }
 
     if (a.length > 0) {
-        //TODO: Examine this
-        // if (!ajaxQueue2.has(a[0].href)) {
-        //     ajaxQueue.push(deviation);
-        //     ajaxQueue2.add(a[0].href);
-        // }
         let [x, y] = [0, 0];
+        let source = '';
         if (a.data("download_width")) {
             x = parseInt(a.data("download_width"));
             y = parseInt(a.data("download_height"));
-            return {
-                width: x,
-                height: y,
-                total: x*y,
-                source: "download",
-                error: a.data("ajax_error")?a.data("ajax_error"):false,
-            };
+            source = "download";
         }
         else if (a.attr("data-super-full-width")) {
             x = parseInt(a.attr("data-super-full-width"));
             y = parseInt(a.attr("data-super-full-height"));
-            return {
-                width: x,
-                height: y,
-                total: x*y,
-                source: "expand",
-                error: a.data("ajax_error")?a.data("ajax_error"):false,
-            };
+            source = "expand";
         }
         else if (a.attr("data-super-width")) {
-                x = parseInt(a.attr("data-super-width"));
-                y = parseInt(a.attr("data-super-height"));
-            return {
-                width: x,
-                height: y,
-                total: x*y,
-                source: "no-expand",
-                error: a.data("ajax_error")?a.data("ajax_error"):false,
-            };
+            x = parseInt(a.attr("data-super-width"));
+            y = parseInt(a.attr("data-super-height"));
+            source = "no-expand";
         }
         else if (a.is("img")) {
-                x = parseInt(a.width());
-                y = parseInt(a.height());
-            return {
-                width: x,
-                height: y,
-                total: x*y,
-                source: "full",
-                error: a.data("ajax_error")?a.data("ajax_error"):false,
-            };
+            [x, y] = [a.get(0).width, a.get(0).height];
+            // x = parseInt(a.width());
+            // y = parseInt(a.height());
+            source = "full";
         }
         else return null;
+
+        return {
+            width: x,
+            height: y,
+            total: x*y,
+            source: source
+        };
     }
 }
 
@@ -108,6 +87,58 @@ DeviationUtils.overlayMessage = function (deviation, message, options) {
         }
         msgElement.html(msgElement.html() + "<br>" + message);
     }
+}
+
+
+DeviationUtils.getDeviationName = function(context = null) {
+    let jq = $(document);
+    if (context !== null) {
+        jq = $(context);
+    }
+    const dlButton = jq.find(".dev-page-download");
+    const reURL = /\/([^\/?]*)(?:\?|$).*$/; //Matches either ".../file.ext" or ".../file.ext?query=params"
+    let name = "";
+    if (dlButton.length > 0) {
+        name = dlButton[0].href.match(reURL)[1];
+    } else {
+        let img = jq.find(".dev-content-full");
+        let username = jq.find(".dev-title-container .username")[0].textContent;
+        if (img.length > 0) {
+            if (~img[0].src.indexOf(username.toLowerCase()) || ~img[0].src.indexOf("_by")) {
+                name = img[0].src.match(reURL)[1];
+            }
+            else {
+                let devName = $(".dev-title-container h1 a")[0].textContent;
+                let reIllegalCharacters = /[\\\/:*?"<>|]/g;
+                let reNewDev = /\/[^\/]*(-.*)$/;
+                // var reOldDev = /\/[^\/]*([^\/]{7}\.[^\/]+)$/; //Last 7 chars
+                let reOldDev = /\/[^\/]*([^\/]*\.[^\/]+)$/; //Just extension
+                devName = devName.replace(reIllegalCharacters, '_');
+                let hash = img[0].src.match(reNewDev);
+                if (hash && hash.length > 1) {
+                    hash = img[0].src.match(reNewDev)[1];
+                }
+                else {
+                    hash = img[0].src.match(reOldDev)[1];
+                }
+                name = devName + " by " + username + hash;
+            }
+        }
+    }
+    return name;
+}
+
+DeviationUtils.getDownloadButton = function(timeout = 20000) {
+    return new Promise(function(resolve, reject) {
+        setTimeout(reject, timeout);
+        let interval = setInterval(() => {
+            let dlButton = $(".dev-page-download");
+            if (dlButton.length > 0) {
+                clearInterval(interval);
+                resolve(dlButton);
+            }
+        }, 200)
+    })
 }
 
 export default DeviationUtils

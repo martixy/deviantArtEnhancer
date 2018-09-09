@@ -46,8 +46,7 @@ One additional consideration is rate limiting.
 Another approach is the browse endpoint, which returns the same data as the deviation endpoint, but in batches of 24.
 */
 
-$.fn.reverse = [].reverse;
-
+initUtils();
 main();
 function main() {
     console.log("dA script loaded");
@@ -59,6 +58,22 @@ function main() {
 }
 
 
+
+function initUtils() {
+    $.fn.reverse = [].reverse;
+
+    Object.defineProperty(Array.prototype, 'subsetOf', {
+        enumerable: false,
+        configurable: false,
+        writable: false,
+        value(superset) {
+            for (let item of this) {
+                if (!superset.includes(item)) return false;
+            }
+            return true;
+        }
+    })
+}
 
 // TODO: Figure this bit out.
 function filterByDimensions(deviation, pixelCount, options) {
