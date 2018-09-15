@@ -7,6 +7,9 @@
 &emsp;\-  Removal  
 &emsp;\.  Comment  
 
+### v1.1.1 [20180915]
+&emsp;\* Fix an osbcure race condition between script and dA when flipping through deviations too fast(by checking if the deviation on the element matches the current address).
+&emsp;\* Fix a silly little bug that made gallery hotkeys trigger wrong.
 
 ### v1.1.0 [20180910]
 &emsp;\~ Refactored downloader to do its job better(and only its job). Also promisify downloader.

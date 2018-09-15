@@ -48,7 +48,7 @@ Downloader.prototype.downloadDeviation = function(url, name, options) {
     options = { ...defaultOptions, ...options };
 
     // Note: Fetch doesn't work because images not same origin, and no CORS is sent.
-    if (GM_info.downloadMode === 'native') {
+    if (GM_info.downloadMode === 'native') { // Browser API does not remember folder!
         if (options.async) {
             console.log('download: GM_download_async');
             return GM_dl_async(url, name, options);
@@ -97,7 +97,7 @@ function GM_dl(url, name, options) {
         saveAs: true,
         ontimeout: () => console.log("Timeout!"),
         onerror(err) {
-            alert("Error: " + err.statusText);
+            alert("Error! (see console)");
             console.error(err);
         },
         onload: () => {},

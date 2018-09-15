@@ -75,7 +75,7 @@ function hasModifiers(event, modifiers, strict = false) {
     if (typeof event === 'string') {
         return [...modifiers].subsetOf([...event]) && (!strict || event.length === modifiers.length);
     } else {
-        return hasModifiers(getModifiers(event), modifiers);
+        return hasModifiers(getModifiers(event), modifiers, strict);
     }
 }
 
