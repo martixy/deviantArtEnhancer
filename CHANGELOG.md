@@ -7,6 +7,9 @@
 &emsp;\-  Removal  
 &emsp;\.  Comment  
 
+### v1.1.2 [20181116]
+&emsp;\~ Handle filenames properly after dA's move to a new CDN  
+
 ### v1.1.1 [20180915]
 &emsp;\* Fix an osbcure race condition between script and dA when flipping through deviations too fast(by checking if the deviation on the element matches the current address).  
 &emsp;\* Fix a silly little bug that made gallery hotkeys trigger wrong.

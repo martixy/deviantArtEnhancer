@@ -98,30 +98,56 @@ DeviationUtils.getDeviationName = function(context = null) {
     const dlButton = jq.find(".dev-page-download");
     const reURL = /\/([^\/?]*)(?:\?|$).*$/; //Matches either ".../file.ext" or ".../file.ext?query=params"
     let name = "";
-    if (dlButton.length > 0) {
-        name = dlButton[0].href.match(reURL)[1];
+    let img = jq.find(".dev-content-full");
+    if (img.length === 0) throw new Error('Expected img.dev-content-full.');
+    img = img[0];
+    if (~img.src.indexOf('https://images-wixmp')) {
+        console.log('wixmp CDN');
+        const reExternalNamed1 = /.*\/(.*)_(.*)-fullview(\..*)/;
+        const reExternalNamed2 = /.*\/(.*)_(.*)-pre(\..*)/;
+        let matches1 = reExternalNamed1.exec(img.src);
+        let img2 = jq.find(".dev-content-normal")[0];
+        let matches2 = reExternalNamed2.exec(img2.src);
+        if (matches1 !== null) {
+            name = `${matches1[1]}-${matches1[2]}${matches1[3]}`;
+        } else if (matches2 !== null) {
+            name = `${matches2[1]}-${matches2[2]}${matches2[3]}`;
+        } else {
+            let username = jq.find(".dev-title-container .username")[0].textContent;
+            let devName = $(".dev-title-container h1 a")[0].textContent;
+            const reIllegalCharacters = /[\\\/:*?"<>|]/g;
+            const reHash = /.*\/(.*?)-.*/;
+            devName = devName.replace(reIllegalCharacters, '_');
+            let hash = reHash.exec(img.src)[1];
+            name = devName + " by " + username + "-" + hash; //.ext automatic
+        }
     } else {
-        let img = jq.find(".dev-content-full");
-        let username = jq.find(".dev-title-container .username")[0].textContent;
-        if (img.length > 0) {
-            if (~img[0].src.indexOf(username.toLowerCase()) || ~img[0].src.indexOf("_by")) {
-                name = img[0].src.match(reURL)[1];
-            }
-            else {
-                let devName = $(".dev-title-container h1 a")[0].textContent;
-                let reIllegalCharacters = /[\\\/:*?"<>|]/g;
-                let reNewDev = /\/[^\/]*(-.*)$/;
-                // var reOldDev = /\/[^\/]*([^\/]{7}\.[^\/]+)$/; //Last 7 chars
-                let reOldDev = /\/[^\/]*([^\/]*\.[^\/]+)$/; //Just extension
-                devName = devName.replace(reIllegalCharacters, '_');
-                let hash = img[0].src.match(reNewDev);
-                if (hash && hash.length > 1) {
-                    hash = img[0].src.match(reNewDev)[1];
+        console.log('da CDN');
+        if (dlButton.length > 0) {
+            name = dlButton[0].href.match(reURL)[1];
+        } else {
+            let img = jq.find(".dev-content-full");
+            let username = jq.find(".dev-title-container .username")[0].textContent;
+            if (img.length > 0) {
+                if (~img[0].src.indexOf(username.toLowerCase()) || ~img[0].src.indexOf("_by")) {
+                    name = img[0].src.match(reURL)[1];
                 }
                 else {
-                    hash = img[0].src.match(reOldDev)[1];
+                    let devName = $(".dev-title-container h1 a")[0].textContent;
+                    let reIllegalCharacters = /[\\\/:*?"<>|]/g;
+                    let reNewDev = /\/[^\/]*(-.*)$/;
+                    // var reOldDev = /\/[^\/]*([^\/]{7}\.[^\/]+)$/; //Last 7 chars
+                    let reOldDev = /\/[^\/]*([^\/]*\.[^\/]+)$/; //Just extension
+                    devName = devName.replace(reIllegalCharacters, '_');
+                    let hash = img[0].src.match(reNewDev);
+                    if (hash && hash.length > 1) {
+                        hash = img[0].src.match(reNewDev)[1];
+                    }
+                    else {
+                        hash = img[0].src.match(reOldDev)[1];
+                    }
+                    name = devName + " by " + username + hash;
                 }
-                name = devName + " by " + username + hash;
             }
         }
     }
