@@ -15,7 +15,9 @@ Downloader.prototype.saveDeviation = function(context = null, async = false) {
     let url = '';
     let dlButton = jq.find(".dev-page-download");
     if (dlButton.length > 0) {
-        url = dlButton[0].href;
+        if (downloadTokenTimeoutCheck())
+            url = dlButton[0].href;
+        else return false
     } else {
         let img = jq.find(".dev-content-full");
         if (img.length > 0) {
@@ -32,11 +34,13 @@ Downloader.prototype.openInNewTab = function(context = null) {
     }
     let dlButton = jq.find(".dev-page-download");
     if (dlButton.length > 0) {
-        GM_openInTab(dlButton[0].href, {
-            active: true,
-            insert: true,
-            setParent: true,
-        });
+        if (downloadTokenTimeoutCheck()) {
+            GM_openInTab(dlButton[0].href, {
+                active: true,
+                insert: true,
+                setParent: true,
+            });
+        }
     }
 }
 
@@ -46,6 +50,15 @@ Downloader.prototype.downloadDeviation = function(url, name, options) {
         async: false
     };
     options = { ...defaultOptions, ...options };
+
+    if (window.performance.now() > 1000 * 605) {
+        let writer = $('.writer');
+        if (writer.text() !== '') {
+            alert('Download token has expired.\nGotta reload to enable download, but you have unsubmitted comments.')
+        } else {
+            window.location.reload()
+        }
+    }
 
     // Note: Fetch doesn't work because images not same origin, and no CORS is sent.
     if (GM_info.downloadMode === 'native') { // Browser API does not remember folder!
@@ -90,6 +103,21 @@ export default Downloader
 
 //===========================================================================================================
 //===========================================================================================================
+function downloadTokenTimeoutCheck() {
+    if (window.performance.now() > 1000 * 605) {
+        let writer = $('.writer');
+        if (writer.text() !== '') {
+            alert('Download token has expired.\nGotta reload to enable download, but you have unsubmitted comments.')
+        } else {
+            window.localStorage.setItem('dae_downloadOnReload', window.location.href)
+            window.location.reload()
+        }
+        return false;
+    }
+    return true;
+}
+
+
 // Notes on GM_download
 // 1. Undocumented, but has "timeout" option
 function GM_dl(url, name, options) {

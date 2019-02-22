@@ -7,6 +7,12 @@
 &emsp;\-  Removal  
 &emsp;\.  Comment  
 
+### v1.2 [20190222]
+&emsp;\~ Add da's new CDN domain to the allowed origins. Requires rebuild/copy to tampermonkey.
+&emsp;\~ Change file names to the new naming scheme (with _ instead of -).
+&emsp;\* Fix some edge cases with file naming - downloads could end up with the wrong extension.
+&emsp;\+ Now auto-reloads page if you try to download and the download token has expired. Won't reload if there is an unsubmitted comment. Timing based (10 minutes).
+
 ### v1.1.2 [20181116]
 &emsp;\~ Handle filenames properly after dA's move to a new CDN  
 

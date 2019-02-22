@@ -37,6 +37,12 @@ DeviationPage.prototype.load = function() {
         }
     }).then(button => addDownloadSizeNote(button));
 
+    let isAutoDownload = window.localStorage.getItem('dae_downloadOnReload') === window.location.href;
+    if (isAutoDownload) {
+        window.localStorage.removeItem('dae_downloadOnReload');
+        self.downloader.saveDeviation();
+    }
+
     this.downloader.bindKeys([
         {
             keys: config.keyBindings.download,

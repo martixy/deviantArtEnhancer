@@ -103,15 +103,26 @@ DeviationUtils.getDeviationName = function(context = null) {
     img = img[0];
     if (~img.src.indexOf('https://images-wixmp')) {
         console.log('wixmp CDN');
-        const reExternalNamed1 = /.*\/(.*)_(.*)-fullview(\..*)/;
-        const reExternalNamed2 = /.*\/(.*)_(.*)-pre(\..*)/;
+        let extension = '';
+        if (dlButton.length > 0) {
+            const reDL = /.*(PNG|JPG|TIFF|GIF|PSD) /;
+            let extMatches = reDL.exec(dlButton[0].textContent);
+            extension = '.'+extMatches[1].toLowerCase();
+        }
+        const reExternalNamed1 = /.*\/(.*)-fullview(\..*)/;
+        const reExternalNamed2 = /.*\/(.*)-pre(\..*)/;
+        const reExternalNamed3 = /.*\.(png|jpg|gif)/;
         let matches1 = reExternalNamed1.exec(img.src);
         let img2 = jq.find(".dev-content-normal")[0];
+        let img3 = jq.find(".dev-content-full")[0];
         let matches2 = reExternalNamed2.exec(img2.src);
+        let matches3 = reExternalNamed3.exec(img3.src);
+        if (extension === '') extension = matches3[1];
+        console.log(extension);
         if (matches1 !== null) {
-            name = `${matches1[1]}-${matches1[2]}${matches1[3]}`;
+            name = `${matches1[1]}${extension}`;
         } else if (matches2 !== null) {
-            name = `${matches2[1]}-${matches2[2]}${matches2[3]}`;
+            name = `${matches2[1]}${extension}`;
         } else {
             let username = jq.find(".dev-title-container .username")[0].textContent;
             let devName = $(".dev-title-container h1 a")[0].textContent;
@@ -119,7 +130,7 @@ DeviationUtils.getDeviationName = function(context = null) {
             const reHash = /.*\/(.*?)-.*/;
             devName = devName.replace(reIllegalCharacters, '_');
             let hash = reHash.exec(img.src)[1];
-            name = devName + " by " + username + "-" + hash; //.ext automatic
+            name = devName + " by " + username + "_" + hash; //.ext automatic
         }
     } else {
         console.log('da CDN');
@@ -165,6 +176,23 @@ DeviationUtils.getDownloadButton = function(timeout = 20000) {
             }
         }, 200)
     })
+}
+
+DeviationUtils.getImageExtension = function(context = null) {
+    let jq = $(document);
+    if (context !== null) {
+        jq = $(context);
+    }
+    const dlButton = jq.find(".dev-page-download");
+    let extension = '';
+    if (dlButton.length > 0) {
+        const reDL = /.*(PNG|JPG|TIFF|GIF|PSD) /;
+        let extMatches = reDL.exec(dlButton[0].textContent);
+        extension = '.'+extMatches[1].toLowerCase();
+    } else {
+
+    }
+    return extension;
 }
 
 export default DeviationUtils
