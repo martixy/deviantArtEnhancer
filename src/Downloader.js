@@ -40,6 +40,8 @@ Downloader.prototype.openInNewTab = function(context = null) {
                 insert: true,
                 setParent: true,
             });
+        } else {
+            timeoutReload(true);
         }
     }
 }
@@ -50,15 +52,6 @@ Downloader.prototype.downloadDeviation = function(url, name, options) {
         async: false
     };
     options = { ...defaultOptions, ...options };
-
-    if (window.performance.now() > 1000 * 605) {
-        let writer = $('.writer');
-        if (writer.text() !== '') {
-            alert('Download token has expired.\nGotta reload to enable download, but you have unsubmitted comments.')
-        } else {
-            window.location.reload()
-        }
-    }
 
     // Note: Fetch doesn't work because images not same origin, and no CORS is sent.
     if (GM_info.downloadMode === 'native') { // Browser API does not remember folder!
@@ -104,17 +97,18 @@ export default Downloader
 //===========================================================================================================
 //===========================================================================================================
 function downloadTokenTimeoutCheck() {
-    if (window.performance.now() > 1000 * 605) {
-        let writer = $('.writer');
-        if (writer.text() !== '') {
-            alert('Download token has expired.\nGotta reload to enable download, but you have unsubmitted comments.')
-        } else {
-            window.localStorage.setItem('dae_downloadOnReload', window.location.href)
-            window.location.reload()
-        }
-        return false;
+    if (window.performance.now() > 1000 * 605) return false;
+    else return true;
+}
+
+function timeoutReload(queueDL = false) {
+    let writer = $('.writer');
+    if (writer.text() !== '') {
+        alert(`Download token has expired (download button won't work).\nTried to auto-reload, but you have unsubmitted comments.`)
+    } else {
+        if (queueDL) window.localStorage.setItem('dae_downloadOnReload', window.location.href)
+        window.location.reload()
     }
-    return true;
 }
 
 
@@ -125,8 +119,13 @@ function GM_dl(url, name, options) {
         saveAs: true,
         ontimeout: () => console.log("Timeout!"),
         onerror(err) {
-            alert("Error! (see console)");
-            console.error(err);
+            if (err.error === 'not_whitelisted') {
+                console.log("Error: Buggy Tampermonkey, falling back to old downloader.");
+                GM_download_emu(url, name, options);
+            } else {
+                alert("Error! (see console)");
+                console.error(err);
+            }
         },
         onload: () => {},
         onprogress: () => {},

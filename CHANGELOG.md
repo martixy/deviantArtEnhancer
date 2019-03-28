@@ -7,10 +7,17 @@
 &emsp;\-  Removal  
 &emsp;\.  Comment  
 
+
+### v1.2.1 [20190328]
+&emsp;\* When download token was expired, page was reloading when it didn't need to.  
+&emsp;\* Fall back to old downloader as workaround for Tampermonkey 'not_whitelisted' error.  
+&emsp;\~ Unify name handling between named images (where the image URL contains a name) and unnamed images (i.e. where I have to generate a name from the page data). Previously it didn't follow the URL pattern, now it does(underscores everywhere). I left a minor difference: it preserves capitalization (URLs are all lowercase).  
+&emsp;\~ Update node modules and rebuild.
+
 ### v1.2 [20190222]
-&emsp;\~ Add da's new CDN domain to the allowed origins. Requires rebuild/copy to tampermonkey.
-&emsp;\~ Change file names to the new naming scheme (with _ instead of -).
-&emsp;\* Fix some edge cases with file naming - downloads could end up with the wrong extension.
+&emsp;\~ Add da's new CDN domain to the allowed origins. Requires rebuild/copy to tampermonkey.  
+&emsp;\~ Change file names to the new naming scheme (with _ instead of -).  
+&emsp;\* Fix some edge cases with file naming - downloads could end up with the wrong extension.  
 &emsp;\+ Now auto-reloads page if you try to download and the download token has expired. Won't reload if there is an unsubmitted comment. Timing based (10 minutes).
 
 ### v1.1.2 [20181116]

@@ -111,14 +111,13 @@ DeviationUtils.getDeviationName = function(context = null) {
         }
         const reExternalNamed1 = /.*\/(.*)-fullview(\..*)/;
         const reExternalNamed2 = /.*\/(.*)-pre(\..*)/;
-        const reExternalNamed3 = /.*\.(png|jpg|gif)/;
+        const reExternalNamed3 = /.*(\.(?:png|jpg|gif))/;
         let matches1 = reExternalNamed1.exec(img.src);
         let img2 = jq.find(".dev-content-normal")[0];
         let img3 = jq.find(".dev-content-full")[0];
         let matches2 = reExternalNamed2.exec(img2.src);
         let matches3 = reExternalNamed3.exec(img3.src);
         if (extension === '') extension = matches3[1];
-        console.log(extension);
         if (matches1 !== null) {
             name = `${matches1[1]}${extension}`;
         } else if (matches2 !== null) {
@@ -126,11 +125,11 @@ DeviationUtils.getDeviationName = function(context = null) {
         } else {
             let username = jq.find(".dev-title-container .username")[0].textContent;
             let devName = $(".dev-title-container h1 a")[0].textContent;
-            const reIllegalCharacters = /[\\\/:*?"<>|]/g;
+            const reIllegalCharacters = /[\\\/:*?"<>| -]/g;
             const reHash = /.*\/(.*?)-.*/;
             devName = devName.replace(reIllegalCharacters, '_');
             let hash = reHash.exec(img.src)[1];
-            name = devName + " by " + username + "_" + hash; //.ext automatic
+            name = devName + "_by_" + username + "_" + hash + extension; //.ext is usually automatic, except when the normal downloader errors out and we're forced to use the fallback, so include anyway.
         }
     } else {
         console.log('da CDN');

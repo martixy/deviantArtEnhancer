@@ -1,6 +1,6 @@
 {
   "name": "deviant-art-enhancer",
-  "version": "1.2",
+  "version": "1.2.1",
   "description": "A userscript that enhances browsing experience on deviantArt",
   "scripts": {
     "build": "webpack --config-register esm",
