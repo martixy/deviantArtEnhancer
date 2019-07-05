@@ -5,8 +5,13 @@
 &emsp;\*  Bugfix  
 &emsp;\~  Change  
 &emsp;\-  Removal  
+&emsp;\!  Security  
 &emsp;\.  Comment  
 
+### v1.3.0 [20190705]
+&emsp;\* Fixed a small bug in the downloader when download token expired.  
+&emsp;\~ Change how key presses are handled, now works with other languages (e.g. if you switch to a different language, the browser receives a character different than the bound one. Now works based on key pressed, rather than character received). It does however assume QWERTY layout (sorry QWERTZ/AZERTY/DVORAK folks).  
+&emsp;\! Update jquery (and all other node packages) after github complained with a security advisory for jq<3.4.
 
 ### v1.2.1 [20190328]
 &emsp;\* When download token was expired, page was reloading when it didn't need to.  

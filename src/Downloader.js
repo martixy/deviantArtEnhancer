@@ -15,9 +15,12 @@ Downloader.prototype.saveDeviation = function(context = null, async = false) {
     let url = '';
     let dlButton = jq.find(".dev-page-download");
     if (dlButton.length > 0) {
-        if (downloadTokenTimeoutCheck())
+        if (downloadTokenTimeoutCheck()) {
             url = dlButton[0].href;
-        else return false
+        } else {
+            timeoutReload(true);
+            return false;
+        }
     } else {
         let img = jq.find(".dev-content-full");
         if (img.length > 0) {

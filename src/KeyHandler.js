@@ -22,7 +22,7 @@ KeyHandler.prototype.registerKey = function(eventType, key, callback) {
     Bro(this.bindings).makeItHappen(`${hash}.${eventType}`, callback);
     if (this.eventTypes[eventType].length === 0) {
         $(document).on(eventType, this.keyRouterBound);
-        console.info('KeyHandler: Adding listener on '+ eventType);
+        console.info('KeyHandler: Adding listener on ' + eventType);
     }
     if (!this.eventTypes[eventType].includes(hash)) {
         this.eventTypes[eventType].push(hash);
@@ -41,7 +41,7 @@ KeyHandler.prototype.unregisterKey = function(eventType, key, callback = null) {
     if (~removee) this.eventTypes[eventType].splice(removee, 1);
     if (this.eventTypes[eventType].length === 0) {
         $(document).off(eventType, this.keyRouterBound);
-        console.info('KeyHandler: Removing listener on '+ eventType);
+        console.info('KeyHandler: Removing listener on ' + eventType);
     }
     delete this.bindings[hash][eventType];
     return key;
@@ -83,13 +83,20 @@ KeyHandler.prototype.keyRouter = function(jev) {
     let ev = jev.originalEvent; //Original event is better.
     const eventHashes = hashEvent(ev);
     for (let [type, hash] of Object.entries(eventHashes)) {
-        if (this.bindings.hasOwnProperty(hash) && this.bindings[hash].hasOwnProperty(ev.type)) this.bindings[hash][ev.type](jev);
+        if (this.bindings.hasOwnProperty(hash) && this.bindings[hash].hasOwnProperty(ev.type)) {
+            this.bindings[hash][ev.type](jev);
+        }
     }
 }
 
+// Normalize to key + type (the key here is not the same as the key property of an event)
 KeyHandler.prototype.normalizeKey = function(key) {
     if (typeof key === 'string') { //Assume key
-        return {key: key, type: 'key', ...this.modifiers}
+        let code = strToCode(key);
+        if (code !== undefined) {
+            return { key: code, type: 'code', ...this.modifiers }
+        }
+        return { key: key, type: 'key', ...this.modifiers }
     }
     // Otherwise assume object
     if (!key.hasOwnProperty('key')) {
@@ -136,5 +143,50 @@ function hashEvent(ev) {
         return carry;
     }, {});
 }
+
+function strToCode(str) {
+    if (str in keyToCodeMap) return keyToCodeMap[str];
+    if (str.match(/^n\d$/) != null) return `Numpad${str[1]}`;
+    if (str.match(/^\d$/) != null) return [`Numpad${str}`, `Digit${str}`];
+    if (str.match(/[a-zA-Z]/) != null) return `Key${str.toUpperCase()}`
+    if (str.match(/^Key[A-Z]$/) != null) return str;
+    if (keyCodes.includes(str)) return str;
+    return undefined;
+}
+
+// q -> KeyQ
+// n+ -> NumpadAdd, n1 -> Numpad1
+// 1 -> Digit1 or Numpad1
+const keyToCodeMap = {
+    'Escape': 'Escape',
+    '`': 'Backquote',
+    '[': 'BracketLeft',
+    ']': 'BracketRight',
+    ';': 'Semicolon',
+    '\'': 'Quote',
+    '\\': 'Backslash',
+    ',': 'Comma',
+    '.': ['Period', 'NumpadDecimal'],
+    '/': ['Slash', 'NumpadDivide'],
+    '-': ['Minus', 'NumpadSubtract'],
+    '*': 'NumpadMultiply',
+    '+': 'NumpadAdd',
+    '=': 'Equal',
+    ' ': 'Space',
+    'Control': ['ControlLeft', 'ControlRight'],
+    'Shift': ['ShiftLeft', 'ShiftRight'],
+    'Alt': ['AltLeft', 'AltRight'],
+    'Meta': ['MetaLeft', 'MetaRight'],
+    'Enter': ['Enter', 'NumpadEnter'],
+    'nEnter': 'NumpadEnter',
+    'n.': 'NumpadDecimal',
+    'n+': 'NumpadAdd',
+    'n-': 'NumpadSubtract',
+    'n*': 'NumpadMultiply',
+    'n/': 'NumpadDivide'
+}
+
+const keyCodes = Object.values(keyToCodeMap).flat();
+
 
 export default KeyHandler

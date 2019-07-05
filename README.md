@@ -1,4 +1,4 @@
-# deviantArtEnhancer v1.2.1
+# deviantArtEnhancer v1.3.0
 A userscript that for enhancing browsing of deviantArt, based on a modern build system(i.e. webpack)
 
 ## Usage
