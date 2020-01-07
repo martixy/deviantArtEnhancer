@@ -8,6 +8,10 @@
 &emsp;\!  Security  
 &emsp;\.  Comment  
 
+### v1.3.1 [20200107]
+&emsp;\~ Site html changed, update the deviation link selector.  
+&emsp;\! Update dependencies.
+
 ### v1.3.0 [20190705]
 &emsp;\* Fixed a small bug in the downloader when download token expired.  
 &emsp;\~ Change how key presses are handled, now works with other languages (e.g. if you switch to a different language, the browser receives a character different than the bound one. Now works based on key pressed, rather than character received). It does however assume QWERTY layout (sorry QWERTZ/AZERTY/DVORAK folks).  

@@ -8,6 +8,7 @@ const GalleryPage = function() {
     this.downloader = new Downloader();
 }
 
+const linkSelector = 'a.torpedo-thumb-link';
 GalleryPage.prototype.load = function() {
     let self = this;
     this.stream.process(deviations => {
@@ -17,7 +18,7 @@ GalleryPage.prototype.load = function() {
                     ev.preventDefault();
                     let siblings = $(this).nextAll(`:lt(${config.shiftClickTabs-1})`).addBack();
                     siblings.reverse().each(function() {
-                        GM_openInTab($(this).find('>a').attr('href'), {active: false, insert: true, setParent: true});
+                        GM_openInTab($(this).find(linkSelector).attr('href'), {active: false, insert: true, setParent: true});
                     })
                 }
                 if (hasModifiers(ev, 'as', true)) {
@@ -54,7 +55,7 @@ export default GalleryPage
 //===========================================================================================================
 function downloadFromThumb(deviation, downloader) {
     let el = $(deviation);
-    const devURL = el.find('>a').attr('href');
+    const devURL = el.find(linkSelector).attr('href');
 
     fetch(devURL, {credentials: 'include'}).then(async function(response) {
         let html = await response.text();
