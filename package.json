@@ -35,6 +35,6 @@
   },
   "dependencies": {
     "brototype": "^0.0.6",
-    "jquery": "^3.4"
+    "jquery": "^3.5"
   }
 }
